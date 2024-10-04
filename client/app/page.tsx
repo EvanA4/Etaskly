@@ -4,21 +4,25 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import Header from './components/header';
 import NotIn from './components/notIn';
 import Loading from './components/loading';
+import Todo from './components/todo';
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <div><Header/><Loading/></div>;
+  if (isLoading) return <div><Header isIn={false}/><Loading/></div>;
   if (error) return <div>{error.message}</div>;
 
   return (
     <div>
-      <Header/>
+      <Header isIn={user != undefined}/>
       {user ? (
-        <div>
-          <img src={user?.picture ?? ''} alt={user?.name ?? ''} className='rounded-full'/>
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
+        <div className='flex flex-col items-center'>
+          <div className='bg-neutral-900 hover:bg-neutral-800 p-10 w-[50vw] flex items-center flex-col my-10 rounded-2xl min-w-[300px]'>
+            <img src={user?.picture ?? ''} alt={user?.name ?? ''} className='rounded-full h-[100px] w-[100px] mb-3'/>
+            <p className='text-3xl text-center'>{user.name}</p>
+            <p className='text-neutral-300'>{user.email}</p>
+          </div>
+          <Todo/>
         </div>
       ) : <NotIn/>}
     </div>
